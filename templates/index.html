@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camfusion</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #6C91C2;
+            font-family: Arial, sans-serif;
+            color: black;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        img {
+            width: 480px;
+            height: 360px;
+            border-radius: 10px;
+            border: 2px solid #000;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 480px;
+            margin-top: 10px;
+        }
+        .left, .right {
+            display: flex;
+            flex-direction: column;
+        }
+        .right {
+            align-items: flex-end;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 10px;
+            border: 1px solid #000;
+        }
+        button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <h1>Camfusion</h1>
+    <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+    <div class="controls">
+        <div class="left">
+            <label for="exercise">Exercise:</label>
+            <select id="exercise">
+                <option>Push Up</option>
+                <option>Hammer Curl</option>
+                <option>Bench Press</option>
+                <option>Lateral Raise</option>
+                <option>Bent Over Row</option>
+                <option>Lunge</option>
+                <option>Side Plank</option>
+                <option>Reverse Swing</option>
+                <option>Barbell Squat</option>
+                <option>Sit Up</option>
+            </select>
+        </div>
+        <div class="right">
+            <p id="duration">Duration: 00:00</p>
+            <p id="count">Count: 0</p>
+        </div>
+    </div>
+    <button id="toggle-btn">Start</button>
+
+    <script>
+        let duration = 0;
+        let count = 0;
+        let interval;
+        let tracking = false;
+
+        function startTracking() {
+            interval = setInterval(() => {
+                if (tracking) {
+                    duration++;
+                    document.getElementById("duration").innerText = `Duration: ${String(Math.floor(duration / 60)).padStart(2, '0')}:${String(duration % 60).padStart(2, '0')}`;
+                    count += Math.random() > 0.7 ? 1 : 0; 
+                    document.getElementById("count").innerText = `Count: ${count}`;
+                }
+            }, 1000);
+        }
+
+        document.getElementById("toggle-btn").addEventListener("click", function() {
+            tracking = !tracking;
+            if (tracking) {
+                startTracking();
+                this.innerText = "Stop";
+            } else {
+                clearInterval(interval);
+                duration = 0;
+                count = 0;
+                document.getElementById("duration").innerText = "Duration: 00:00";
+                document.getElementById("count").innerText = "Count: 0";
+                this.innerText = "Start";
+            }
+        });
+    </script>
+</body>
+</html>
